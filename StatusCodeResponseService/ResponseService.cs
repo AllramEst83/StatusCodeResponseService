@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using StatusCodeResponseService.Helpers;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace StatusCodeResponseService
 {
     public static class ResponseService
     {
-        public static R GetResponse<R, T>(T _object, ModelStateDictionary modelState)
+        public static async Task<R> GetResponse<R, T>(T _object, ModelStateDictionary modelState)
         {
             Type objectType = _object.GetType();
             Type R_instanceType = typeof(R);
@@ -45,7 +46,7 @@ namespace StatusCodeResponseService
                };
             }
 
-            R R_objectInstance = (R)Activator.CreateInstance(R_instanceType, args);
+            R R_objectInstance = await Task.FromResult((R)Activator.CreateInstance(R_instanceType, args));
 
             return R_objectInstance;
         }
